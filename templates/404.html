@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+{% block content %}
+<h1>In b4 the 404 :( </h1>
+{{err}}
+<p>Woops it already happened. Something went wrong. Perhaps you're trying to go somewhere you shouldn't. <br>Or I messed up.... But that could never happen, right?</p>
+<!--This is me messing around with flask's url_for option' Good for serving static files. Images such as logos tend to be static
+Derived information from here http://stackoverflow.com/questions/28207761/where-does-flask-look-for-image-files -->
+<!--<img src="{{url_for('static', filename='pictures/404pic.jpg')}}" />-->
+
+{% endblock %}
