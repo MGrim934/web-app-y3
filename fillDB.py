@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,DATETIME
 from sqlalchemy.orm import sessionmaker
 #fills up the db with a few basic things
 #primarily for testing
@@ -23,8 +23,8 @@ session.add(user)
 user = User("Bill","gate")
 session.add(user)
 
-
-post = Post("title","content test","admin")
+dt = datetime.datetime.today()
+post = Post("title","content test","admin",dt)
 session.add(post)
 
  

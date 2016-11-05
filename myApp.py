@@ -1,8 +1,16 @@
 from flask import Flask, flash, render_template, request, url_for, redirect,session,abort
 import os
+import datetime
+#https://docs.python.org/2/library/datetime.html#datetime.datetime.tzinfo
+#decided to import datetime but only use date element
+#blog does not need Time
+#may consider adding time in the Future 
+#perhaps moment.js and utc formatting?
 
 from sqlalchemy.orm import sessionmaker,scoped_session
 from tableDef import *
+
+
 
 #Mark Grimes Third year web app project
 
@@ -36,6 +44,9 @@ app = Flask(__name__)
 @app.route("/home/")
 def index():
     if not session.get('logged_in'):
+        
+        now = datetime.datetime.today()
+        print(now)
         return render_template("welcome.html")
         #if they aren't logged in, bring them to the welcome screen
         #not much to do except log in and feel...welcome
@@ -71,7 +82,7 @@ def login():
             #storing the username in a session, so when the logged in user makes a post. We can easily grab it and assign it to the post
             session["username"]=name
             #session, so we can track if the user can actually get to the dashboard
-            return dashboard()
+            return redirect("dashboard")
             
         else:
             flash("Incorrect Log in")
@@ -91,7 +102,7 @@ def dashboard():
     else:
         flash("You need to log in to access the dashboard")
         #message flashing
-        return login()
+        return redirect("login")
         #you're not logged in so you'll go to the login. No cutting the line!
 
 
@@ -164,20 +175,23 @@ def create():
             title=request.form['title']
             content=request.form['content']
             username= session.get("username")
+           
+            dt = datetime.datetime.today()
             print(username)
             print(content)
             print(title)
+            print(dt)
             #just making sure its taking values in correctly
             #lets see if we can add to a database
             #Session = sessionmaker(bind=engine)
            # s=Session()
-            post = Post(title,content,username)
+            post = Post(title,content,username,dt)
             #creating a Post object defined in tableDef
             db_session.add(post)
             db_session.commit()
            # s.close()
             #send them back to the dash, perhaps it will send them straight to posts in the future
-            return dashboard()
+            return redirect("posts")
         else:
             #its a get request, so send them to the creation page itself
             return render_template("create.html")

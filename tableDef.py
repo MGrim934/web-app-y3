@@ -1,6 +1,6 @@
 from sqlalchemy import *
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Date, Integer, String
+from sqlalchemy import Column, Date, Integer, String,DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
  
@@ -36,13 +36,15 @@ class Post(Base):
     title = Column(String)
     content = Column(String)
     username = Column(String)
+    date = Column(Date)
  
     #----------------------------------------------------------------------
-    def __init__(self, title, content, username):
+    def __init__(self, title, content, username, date):
         """"""
         self.title = title
         self.content = content
         self.username = username
+        self.date= date
 
 
  
