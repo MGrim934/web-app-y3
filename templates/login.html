@@ -5,15 +5,7 @@
 <a  href="/dashboard/"><button class="button">Go to the Dashboard </button></a>
 
 {% else %}
-<form action="/login/" method="POST">
-  <input type="username" name="username" placeholder="Username">
-  <input type="password" name="password" placeholder="Password">
-  <input type="submit" value="Log in">
-</form>
-<!-- http://flask.pocoo.org/docs/0.11/patterns/flashing/
-        found information on flashing here. Handy for different errors
-        Perhaps the user had an incorrect login, or tried to skip directly to the dash -->
-{% endif %}
+
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -23,4 +15,26 @@
     </ul>
   {% endif %}
 {% endwith %}
+<!--col - columns
+ md - medium
+ 3 of twelve potential columns, this element takes 3
+ offsets by x number of columns-->
+<div class="container col-md-3 offset-md-2">
+<form action="/login/" method="POST">
+  <div class="form-group">
+    <label for="UserName">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="Enter your username" name="username">
+  </div>
+  <div class="form-group">
+    <label for="Password">Password</label>
+    <input type="password" class="form-control" id="password" name="password"placeholder="Password">
+  </div>
+   <button type="submit" class="btn btn-block btn-success">Log in</button>
+</form>
+</div>
+<!-- http://flask.pocoo.org/docs/0.11/patterns/flashing/
+        found information on flashing here. Handy for different errors
+        Perhaps the user had an incorrect login, or tried to skip directly to the dash -->
+{% endif %}
+
 {% endblock %}

@@ -1,8 +1,29 @@
 {% extends "index.html" %}
 {% block content %}
-<h1>Hey, how is it going. You should log in</h1>
+<div class="container-fluid">
 
-<a  href="/login/"><button class="button">Log in </button></a>
+    <div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-1">CoolSite</h1>
+    <p class="lead">Welcome to this Mark's magic blog post maker thing</p>
+    <hr>
+    You are here, so why don't you log in and make a post. Or register if you don't have an account!
+    <hr class="my-2">
+    
+    
+    <ul class="list-inline ">
+        <li class="list-inline-item "><a class="btn btn-primary" href="/register/" role="button">Register</a></li>
+        
+        <li class="list-inline-item "><a class="btn btn-primary" href="/login/" role="button">Log in</a></li>
+
+    </ul>
+    
+
+
+    
+  </div>
+</div>
+    </div>
 
 
 {% endblock %}
