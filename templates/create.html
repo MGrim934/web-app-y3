@@ -1,19 +1,14 @@
 {% extends "index.html" %}
 {% block content %}
 
-<h1>Create a post!</h1>
-<form action="/create/" method="POST">
-  <input type="text" name="title" placeholder="Title">
-  <input type="textarea" name="content" placeholder="Content">
-  <input type="submit" value="CreatePost">
-</form>
+<h1 class="display-3" id="head">Create</h1>
 <!-- http://flask.pocoo.org/docs/0.11/patterns/flashing/
         found information on flashing here. Handy for different errors
         Perhaps the user had an incorrect login, or tried to skip directly to the dash -->
-
-<form action="/create/" method="POST">
-  <div class="form-group">
-    <label for="UserName">Username</label>
+<div class="container " >
+<form action="/create/" method="POST" class= "col-md-10 offset-md-1">
+  <div class="form-group ">
+    <label for="Title">Title</label>
     <input type="text" class="form-control" id="title" placeholder="Title" name="title">
   </div>
 
@@ -22,7 +17,8 @@
     <label for="postContent">Words go here</label>
     <textarea class="form-control" id="content" name="content" rows="3"></textarea>
   </div>
-   <button type="submit" class="btn btn-block btn-primary">Publish</button>
+   <button type="submit" class="btn btn-primary">Publish</button>
 </form>
+</div>
 
 {% endblock %}

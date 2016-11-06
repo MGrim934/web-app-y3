@@ -1,21 +1,38 @@
-{% extends "index.html" %}
-{% block content %}
+{% extends "index.html" %} {% block content %}
 
-    <!-- Simple way to test db -->
-    <!--https://www.tutorialspoint.com/flask/flask_sqlalchemy.htm-->
-    <div class ="container" id = "postContainer">
-            {% for p in posts %}
-               
-                  {{ p.username }}   {{ p.title }} 
-                  <h1>WOAH</H1>
-                
-                  
-                  <p id="post{{p.id}}">{{p.content}}</p> 
-                  {{p.date}}
-                  {{p.id}} 
-       
-              
-            {% endfor %}
-            </div>
+<!-- Simple way to test db -->
+<!--https://www.tutorialspoint.com/flask/flask_sqlalchemy.htm-->
+<div class="container" id="postContainer">
+    <h1 class ="display-1">Recent Posts </h1>
+    {% for p in posts| sort(attribute="id",reverse=True) %}
+    <!--CURRENTLY SORTING BY ID -->
+    <!-- http://stackoverflow.com/questions/1959386/how-do-you-sort-a-list-in-jinja2 -->
+    
+
+
+   <!-- <p id="post{{p.id}}">{{p.content}}</p>-->
+   
+
+
+
+    <div class="jumbotron" id="jumbo{{p.id}}">
+        <div class="container">
+
+            <h1 class="display-4">{{p.title}} 
+                 
+            </h1>
+            
+            
+            
+            <hr>
+            <p id="post{{p.id}}">{{p.content}}</p>
+            <hr>
+            <small class="text-muted">User: {{p.username}} Date: {{p.date}} id:  {{p.id}}</small>
            
+        </div>
+        
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}
