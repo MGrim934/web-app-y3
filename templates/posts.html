@@ -1,17 +1,21 @@
 {% extends "index.html" %}
 {% block content %}
-<table>
+
     <!-- Simple way to test db -->
     <!--https://www.tutorialspoint.com/flask/flask_sqlalchemy.htm-->
+    <div class ="container" id = "postContainer">
             {% for p in posts %}
-               <tr>
-                  <td>{{ p.username }} </td>
-                  <td>{{ p.title }} </td>
-                  <td>{{p.content}} </td>
-                  <td>{{p.date}} </td>
-                  <td>{{p.id}} </td>
+               
+                  {{ p.username }}   {{ p.title }} 
+                  <h1>WOAH</H1>
+                
+                  
+                  <p id="post{{p.id}}">{{p.content}}</p> 
+                  {{p.date}}
+                  {{p.id}} 
        
-               </tr>
+              
             {% endfor %}
-            </table>
+            </div>
+           
 {% endblock %}
