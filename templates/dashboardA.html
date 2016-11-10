@@ -1,0 +1,58 @@
+{% extends "index.html" %} {% block content %}
+<h1>Dashboard </h1>
+<!-- Messing around with two dashboards so I can break one and still ensure functionality is working, end product should only have one -->
+<a href="/create/"><button class="button">Create</button></a>
+<a href="/posts/"><button class="button">recent posts</button></a>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+
+            <div class="container" id="postContainer">
+                <h1 class="display-1">Recent Posts </h1>
+                {% for p in posts| sort(attribute="id",reverse=True) %}
+                <!--CURRENTLY SORTING BY ID -->
+                <!-- http://stackoverflow.com/questions/1959386/how-do-you-sort-a-list-in-jinja2 -->
+
+
+
+                <!-- <p id="post{{p.id}}">{{p.content}}</p>-->
+
+
+
+
+                <div class="jumbotron" id="jumbo{{p.id}}">
+                    <div class="container">
+
+                        <h1 class="display-4">{{p.title}}
+
+                        </h1>
+
+
+
+                        <hr>
+                        <p id="post{{p.id}}">{{p.content}}</p>
+                        <hr>
+                        <small class="text-muted">User: {{p.username}} Date: {{p.date}} id:  {{p.id}}</small>
+
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+
+        </div>
+        <div class="col-md-4">cStuff</div>
+
+        
+    </div>
+</div>
+<button class="button" id="showRated">Click me </button>
+
+
+
+
+
+
+{% endblock %}

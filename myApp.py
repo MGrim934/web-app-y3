@@ -1,6 +1,8 @@
-from flask import Flask, flash, render_template, request, url_for, redirect,session,abort
+from flask import Flask, flash, render_template, request, url_for, redirect,session,abort,json,jsonify
 import os
+
 import datetime
+
 #https://docs.python.org/2/library/datetime.html#datetime.datetime.tzinfo
 #decided to import datetime but only use date element
 #blog does not need Time
@@ -9,6 +11,31 @@ import datetime
 
 from sqlalchemy.orm import sessionmaker,scoped_session
 from tableDef import *
+from marshmallow import Schema, fields,post_dump
+#what is marshmallow
+#serialisation
+#use case: convert sqlalchemy object to json so I can mess with it in jquery
+#api
+#http://marshmallow.readthedocs.io/en/latest/quickstart.html
+
+
+class postSchema(Schema):
+    class Meta:
+        fields= ("id","title","content","username","date")
+
+
+
+class userSchema(Schema):
+    class Meta:
+        fields= ("id","username","password")
+
+#define schemas that corresspond to the database models
+#then these can be used to "dump" the sqlalchemy object into something that can be jsonified
+#json doesnt play nice with sqlalchemy objects
+
+
+
+
 
 
 
@@ -156,15 +183,6 @@ def register():
 
 #==================================end of /register/====================
 
-@app.route("/users/")
-def showUsers():
-    #Session = sessionmaker(bind=engine)
-    #s=Session()
-    users =  db_session.query(User).all()
-    #this is mainly a test view to make sure I can add and view users
-    #shouldn't be in the final app'
-  
-    return render_template("users.html", users=users)
 
 
 @app.route("/create/", methods=["GET","POST"])
@@ -215,11 +233,55 @@ def posts():
 
 #============endof/posts/======================================================
 
+@app.route("/posts/<id>")
+def showPost(id):
+    posts = db_session.query(Post).filter(Post.id.in_(id))
+    return render_template("posts.html", posts=posts)
 
 
 @app.route("/about/")
 def about():
     return render_template("about.html")
+
+#test for new dashboard
+@app.route("/dashboarda/")
+def dash2():
+    posts =  db_session.query(Post).all()
+    return render_template("dashboardA.html",posts=posts)
+
+@app.route("/allposts/")
+def getall():
+    #get everything
+    result = db_session.query(Post).all()
+    schema = postSchema(many=True)
+    #create a schema object - many=true ensures it will work with a list of objects like this query!
+    res= schema.dump(result)
+    #dumping the result
+    print(res.data)
+    return json.dumps(res.data)
+    #finally returning it as a json friendly String
+    #can be parsed with jquery in the view
+    #hurray
+    
+    #result =[dict(r) for r in db_session.query(Post).all()]
+
+
+@app.route("/users/")
+def getUsers():
+    result = db_session.query(User).all()
+    schema = userSchema(many=True)
+    res= schema.dump(result)
+    print(res.data)
+    return json.dumps(res.data)
+    
+   
+   
+    
+  
+  
+
+    
+    
 
 
 

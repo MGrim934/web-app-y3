@@ -47,6 +47,13 @@ class Post(Base):
         self.date= date
 
 
+
+    
+
+
+
+
+
  
 # create tables
 Base.metadata.create_all(engine)
