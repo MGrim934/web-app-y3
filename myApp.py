@@ -273,6 +273,40 @@ def getUsers():
     res= schema.dump(result)
     print(res.data)
     return json.dumps(res.data)
+
+@app.route("/userposts/")
+def getUserInfo():
+    #get everything
+    name = session.get("username")
+    print(name)
+    #whats the difference between filter and filter_by?
+    result = db_session.query(Post).filter_by(username = name).all()
+    schema = postSchema(many=True)
+    #create a schema object - many=true ensures it will work with a list of objects like this query!
+    res= schema.dump(result)
+    #dumping the result
+    print(res.data)
+    return json.dumps(res.data)
+
+
+@app.route("/userposts/<i>")
+def getPost(i):
+    #get everything
+    print("stuuuuuuuuuuuuuuuuuuuuuuuffff")
+    print(i)
+    
+    #whats the difference between filter and filter_by?
+    
+    p = db_session.query(Post).get(i)
+    #sqlalchemy prefers if you get when filtering by id
+    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
+   # print(p)
+    schema = postSchema()
+    #create a schema object - many=true ensures it will work with a list of objects like this query!
+    res= schema.dump(p)
+    #dumping the result
+    print(res.data)
+    return json.dumps(res.data)
     
    
    
