@@ -3,6 +3,11 @@ import os
 
 import datetime
 
+#main to-do list
+#adapt create route for ajax
+#ensure appropriate redirection based on logging in/out
+#make the test dashboard the new main dashboard and phase out the early one
+
 #https://docs.python.org/2/library/datetime.html#datetime.datetime.tzinfo
 #decided to import datetime but only use date element
 #blog does not need Time
@@ -187,6 +192,7 @@ def register():
 
 @app.route("/create/", methods=["GET","POST"])
 def create():
+    #need to update this for ajax and stuff
     if session.get("logged_in")==True:
         #you are logged in so you can make a post!
         if request.method=="POST":
@@ -307,6 +313,26 @@ def getPost(i):
     #dumping the result
     print(res.data)
     return json.dumps(res.data)
+
+@app.route("/userposts/<i>",methods=["DELETE"])
+def deleteIt(i):
+    #get everything
+    print("Delete Test")
+    print(i)
+    
+    #whats the difference between filter and filter_by?
+    
+    #first get the record I want to delete
+    a=db_session.query(Post).get(i)
+    #now delete it
+    db_session.delete(a)
+    db_session.commit()
+    #need to commit delete 
+    #sqlalchemy prefers if you get when filtering by id
+    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
+   # print(p)
+ 
+    return "deleted"
     
    
    
