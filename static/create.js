@@ -23,9 +23,12 @@ $("#btnPublish").click(function (e) {
     }
     console.log(post)
     $.post("/create/",post,function(e){
-        //optional callback
-        console.log(e);
+        console.log("Test"+ e);
+        swapDisplay();
+
     });
+
+
 
 });
 
@@ -33,7 +36,7 @@ $("#btnPublish").click(function (e) {
 
 $("#btnCancel").click(function () {
     console.log("cancel that");
-    swapDisplay()
+    swapDisplay();
 
 
 

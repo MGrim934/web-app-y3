@@ -144,6 +144,8 @@ def dashboard():
 @app.route("/logout/")
 def logout():
     session["logged_in"]=False
+    session.pop('username',None)
+    #http://flask.pocoo.org/docs/0.11/quickstart/#sessions
     return index()
     #sets the session log in to False
     #returns them to the welcome screen
@@ -215,7 +217,7 @@ def create():
             db_session.commit()
            # s.close()
             #send them back to the dash, perhaps it will send them straight to posts in the future
-            return redirect("posts")
+            return "success"
         else:
             #its a get request, so send them to the creation page itself
             return render_template("create.html")
