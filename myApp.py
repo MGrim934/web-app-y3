@@ -129,7 +129,7 @@ def login():
 def dashboard():
     if session.get("logged_in")==True:
         
-        return render_template("dashboard.html")
+        return render_template("dashboardFull.html")
         #send the user to the main dash!
     else:
         flash("You need to log in to access the dashboard")
@@ -252,10 +252,10 @@ def about():
     return render_template("about.html")
 
 #test for new dashboard
-@app.route("/dashboarda/")
-def dash2():
+@app.route("/dashboard/")
+def dash():
     posts =  db_session.query(Post).all()
-    return render_template("dashboardA.html",posts=posts)
+    return render_template("dashboardFull.html",posts=posts)
 
 @app.route("/allposts/")
 def getall():
@@ -335,6 +335,20 @@ def deleteIt(i):
    # print(p)
  
     return "deleted"
+
+@app.route("/showall/")
+def showAll():
+    p=result = db_session.query(Post).all()
+    return render_template("allPosts.html",posts=p)
+
+@app.route("/userposts/f/")
+def userPosts():
+
+    name = session.get("username")
+    print(name)
+  
+    result = db_session.query(Post).filter_by(username = name).all()
+    return render_template("userPosts.html",posts=result)
     
    
    

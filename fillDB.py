@@ -20,11 +20,17 @@ session.add(user)
 user = User("Mark","Cool1")
 session.add(user)
  
-user = User("Bill","gate")
+user = User("JohnDoe1","word123")
 session.add(user)
 
 dt = datetime.datetime.today()
-post = Post("title","content test","admin",dt)
+post = Post("First Post","This is the first post in this blog thing. \n I hope it goes well","admin",dt)
+session.add(post)
+
+post = Post("Just Another Day","Dummy data, hurray!","admin",dt)
+session.add(post)
+
+post = Post("More Dummy Date","Its a thing with a place.\n Should have really used latin.","Mark",dt)
 session.add(post)
 
  

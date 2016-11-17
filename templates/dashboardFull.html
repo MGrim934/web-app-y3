@@ -1,7 +1,6 @@
 {% extends "index.html" %} {% block content %}
-<h1>Dashboard </h1>
-<a href="/create/"><button class="button">Create</button></a>
-<a href="/posts/"><button class="button">recent posts</button></a>
+<h1 class="display-1">Dashboard </h1>
+
 
 <div class="container">
     <div class="row">
@@ -26,19 +25,7 @@
 
             <div class="container" id="postContainer">
                 <h1 class="display-1">Recent Posts </h1>
-                {% for p in posts| sort(attribute="id",reverse=True) %}
-                <!--CURRENTLY SORTING BY ID -->
-                <!-- http://stackoverflow.com/questions/1959386/how-do-you-sort-a-list-in-jinja2 -->
 
-
-
-                <!-- <p id="post{{p.id}}">{{p.content}}</p>-->
-                <h1>Title</h1>
-                <p class="lead">Nyeh asdf</p>
-                <hr>
-                <p>a</br>a
-                </p>
-                <hr> {% endfor %}
             </div>
 
 
@@ -47,6 +34,7 @@
         <div class="col-md-4">
             <h3 style="lead">Options</h3>
             <button type="button" class="btn btn-info btn-block" id="btnMyPosts">Manage My Posts</button>
+            <button type="button" class="btn btn-info btn-block" id="btnAllPosts">Display All Details</button>
             <button type="button" class="btn btn-primary btn-block" id="btnCreate">Create</button>
         </div>
 
@@ -55,5 +43,9 @@
 </div>
 
 
-<button class="button" id="showRated">Click me </button>
-<button class="button" id="tiredTest">Click me </button> {% endblock %}
+
+<button class="button" id="test3">Test </button>
+
+
+
+ {% endblock %}

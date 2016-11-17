@@ -1,8 +1,4 @@
-{% extends "index.html" %} {% block content %}
 
-<!-- Simple way to test db -->
-<!--https://www.tutorialspoint.com/flask/flask_sqlalchemy.htm-->
-<div class="container" id="postContainer">
     <h1 class ="display-1">Recent Posts </h1>
     {% for p in posts| sort(attribute="id",reverse=True) %}
     <!--CURRENTLY SORTING BY ID -->
@@ -10,7 +6,7 @@
     
 
 
-    <p id="post{{p.id}}">{{p.content}}</p>
+   <!-- <p id="post{{p.id}}">{{p.content}}</p>-->
    
 
 
@@ -25,7 +21,7 @@
             
             
             <hr>
-            <p id="post{{p.id}}" >{{p.content}}</p>
+            <p id="post{{p.id}}">{{p.content}}</p>
             <hr>
             <small class="text-muted">User: {{p.username}} Date: {{p.date}} id:  {{p.id}}</small>
            
@@ -34,5 +30,3 @@
     </div>
     {% endfor %}
 </div>
-
-{% endblock %}
