@@ -16,7 +16,7 @@
 </head>
 <!-- Nav bar classes from bootstrap v4 templates-->
 
-<nav class="navbar navbar-light bg-faded">
+<nav class="navbar navbar-dark bg-inverse">
   <div class="nav navbar-nav">
       <!-- if the screen is smaller, the nav bar collapses-->
       <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"></button>
@@ -33,7 +33,6 @@
         This tutorials login screen used sessions to see if you were already logged in and display the appropriate message using jinja
         after implementing it in a way the tutorial suggested, attempted to expand on the idea and use it to dictate whether the page says login/out
         seems to be working - hurray! -->
-                <a class="nav-item nav-link" href="/create/">Create</a>
                 <a class="nav-item nav-link" href="/logout/">Log out</a>
                 <span class="navbar-text float-xs-right text-muted">
                     Logged in as {{session.get("username")}}

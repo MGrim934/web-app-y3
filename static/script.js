@@ -1,21 +1,39 @@
 //dashboard specific functions here?
 $(function () {
-    console.log("sup")
+    showRecentPosts();
 
-    $.get("/allposts/", function (data) {
-        console.log(data)
-        d = JSON.parse(data);
-        console.log(d);
-        d.sort(function (a, b) {
-            return b.id - a.id;
-        });
-        //sorts it by id
-        console.log(d)
-        console.log(d.length);
+});
+
+var showRecentPosts = function (){
+    
+    $.get("/allposts/",function(data){
+        //get all posts
+        
+        d=JSON.parse(data);
+        //parse that data as json
+        //        d.sort(function (a, b) {
+        //    return b.id - a.id;
+      //  });
+      sortMe(d);
+        //sort it by id! Recent up the top
         loadPosts(d);
+        //load them
 
     });
 
+
+}
+var sortMe= function (posts){
+console.log("sort test")
+                posts.sort(function (a, b) {
+            return b.id - a.id;
+        });
+}
+
+$("#btnRecentPosts").click(function(){
+   
+
+    showRecentPosts();
 });
 
 //main to dos
@@ -32,6 +50,7 @@ $(function () {
 var loadPosts = function (data) {
     //assume data is the list of posts
     $("#postContainer").empty();
+    //empty it out
     //only want to show ten most recent posts
     if (data.length > 10) {
         show = 10;
@@ -39,65 +58,44 @@ var loadPosts = function (data) {
         show = data.length;
     }
     for (var i = 0; i < show; i++) {
-
-        var post = "<h1 class='display-4'>" + data[i].title + "</h1>";
-        var formatPost = data[i].content.replace(/\n/g, "<br/>");
-        post += "<p class='lead'> By: " + data[i].username + " Date: " + data[i].date + "</p><hr>";
-        post += "<p>" + formatPost + "</p><hr></div>";
+        //function to format a post
+        //neato burrito
+       
+        var p = format(data[i]);
 
         //post += '<hr><button type="button" class="btn btn-info manage" id="' + data[i].id + '" >Change</button>'
 
-        $("#postContainer").append(post);
+        $("#postContainer").append(p);
+        //in this case append, could html as well
 
 
     }//for
 
 
-    //create a posts
-    //append it?
+ 
 }//load posts
 
-//on initial page load
+
+
+var format = function(curPost){
+    //formats the current post!
+
+        var post = "<div class='container' style='background-color: rgba(0,0,20,0.1); margin-bottom: 10px;'><h1 class='display-3'>" + curPost.title + "</h1>";
+        var formatPost = curPost.content.replace(/\n/g, "<br/>");
+        post += "<p> By: " + curPost.username + " Date: " + curPost.date + "</p><hr >";
+        post += "<p class='lead'>" + formatPost + "</p><hr></div>";
+
+        return post;
+
+
+}
+
 
 
 $("#btnMyPosts").click(function () {
     console.log("test")
-    $.get("/userposts/", function (data) {
-        console.log(data)
-        //load the posts
-        $("#postContainer").empty();
-        d = JSON.parse(data)
-        console.log(d)
-        console.log(d.length)
-        if (d.length < 1) {
-            console.log("empty")
-            $("#postContainer").append("You have not made any posts!");
-        } else {
+    updateViewPersonal();
 
-
-            for (var i = 0; i < d.length; i++) {
-
-                var post = "<h1 class='display-4'>" + d[i].title + "</h1>";
-                var formatPost = d[i].content.replace(/\n/g, "<br/>");
-                post += "<p class='lead'> By: " + d[i].username + " Date: " + d[i].date + "</p><hr>";
-                post += "<p>" + formatPost + "</p><hr></div>";
-
-                post += '<hr><button type="button" class="btn btn-info manage" id="' + d[i].id + '" >Change</button>'
-
-                $("#postContainer").append(post);
-
-
-            }//for
-
-
-
-
-        }
-
-
-
-        //callback
-    });
 
 
 
@@ -134,13 +132,12 @@ $("#postContainer").on("click", ".manage", function (e) {
 
 function updateViewPersonal() {
     $.get("/userposts/", function (data) {
-        //console.log(data)
-        //load the posts
-       
+      
         $("#postContainer").empty();
         d = JSON.parse(data)
-        console.log(d)
-        console.log(d.length)
+      
+        sortMe(d);
+        //sort it out m8
         if (d.length < 1) {
             console.log("empty")
             $("#postContainer").append("You have not made any posts!");
@@ -149,10 +146,7 @@ function updateViewPersonal() {
 
             for (var i = 0; i < d.length; i++) {
 
-                var post = "<h1 class='display-4'>" + d[i].title + "</h1>";
-                var formatPost = d[i].content.replace(/\n/g, "<br/>");
-                post += "<p class='lead'> By: " + d[i].username + " Date: " + d[i].date + "</p><hr>";
-                post += "<p>" + formatPost + "</p><hr></div>";
+                var post = format(d[i]);
 
                 post += '<hr><button type="button" class="btn btn-info manage" id="' + d[i].id + '" >Change</button>'
 
@@ -298,7 +292,7 @@ var displayTitles = function () {
         $("#postContainer").append("<table class ='table'></table>");
         $("#postContainer").find("table").append("<thead><tr><td>Title</td> <td>Author</td> <td>Date</td> </tr> </thead>");
         for (var i = 0; i < d.length; i++) {
-            $("#postContainer").find("table").append("<tr> <td>" + d[i].title + "</td><td>" + d[i].username + "</td> <td>" + d[i].date + "</td><td><button class='btnShowMore' id = " + d[i].id + ">click me</button></td>+ </tr>")
+            $("#postContainer").find("table").append("<tr> <td>" + d[i].title + "</td><td>" + d[i].username + "</td> <td>" + d[i].date + "</td><td><button class='btn btn-block btn-secondary btnShowMore' id = " + d[i].id + ">click me</button></td>+ </tr>")
         }
         //dynamically adding and adding to tables
         //http://stackoverflow.com/questions/2160890/how-do-you-append-rows-to-a-table-using-jquery
@@ -312,7 +306,7 @@ var displayTitles = function () {
     //out put it
 }
 
-$("#btnAllPosts").click(function () {
+$("#btnAllDetails").click(function () {
     console.log("Clicked all posts")
     displayTitles();
 
@@ -327,11 +321,7 @@ $("#postContainer").on("click", ".btnShowMore", function (e) {
     $.get("/userposts/" + id, function (data) {
         console.log(data)
         d = JSON.parse(data);
-
-        var post = "<h1 class='display-4'>" + d.title + "</h1>";
-        var formatPost = d.content.replace(/\n/g, "<br/>");
-        post += "<p class='lead'> By: " + d.username + " Date: " + d.date + "</p><hr>";
-        post += "<p>" + formatPost + "</p><hr></div>";
+        post= format(d);
 
         /*   if(id==d.id){
            post += '<hr><button type="button" class="btn btn-info manage" id="' + d.id + '" >Change</button>';
@@ -343,3 +333,4 @@ $("#postContainer").on("click", ".btnShowMore", function (e) {
 
 
 });
+

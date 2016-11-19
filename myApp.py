@@ -83,6 +83,7 @@ def index():
         #if they aren't logged in, bring them to the welcome screen
         #not much to do except log in and feel...welcome
     else:
+        flash("You are logged in!")
         return dashboard()
         #bring them to the guts of the web app that allows post creation and viewing
         # if they are logged in then they should go straight to the dash

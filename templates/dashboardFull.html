@@ -1,8 +1,19 @@
-{% extends "index.html" %} {% block content %}
-<h1 class="display-1">Dashboard </h1>
+{% extends "index.html" %} {% block content %} {% with messages = get_flashed_messages() %} {% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
 
 
 <div class="container">
+    <div class="jumbotron jumbotron-fluid">
+        <h1 class="display-1">Dashboard </h1><small>Create, View and Manage Posts</small>
+
+    </div>
+
     <div class="row">
         <div class="col-md-8">
             <div class="container" style="display: none" id="postCreator">
@@ -31,11 +42,15 @@
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 bg-info-outline">
             <h3 style="lead">Options</h3>
-            <button type="button" class="btn btn-info btn-block" id="btnMyPosts">Manage My Posts</button>
-            <button type="button" class="btn btn-info btn-block" id="btnAllPosts">Display All Details</button>
-            <button type="button" class="btn btn-primary btn-block" id="btnCreate">Create</button>
+            <button type="button" class="btn btn-primary btn-block" id="btnMyPosts">Manage My Posts</button>
+            <button type="button" class="btn btn-info btn-block" id="btnAllDetails">Show Everyone's Posts</button>
+            <button type="button" class="btn btn-info btn-block" id="btnRecentPosts">Recent Posts</button>
+
+
+            <button type="button" class="btn btn-success btn-block" id="btnCreate">Create</button>
+        
         </div>
 
 
@@ -44,8 +59,4 @@
 
 
 
-<button class="button" id="test3">Test </button>
-
-
-
- {% endblock %}
+<button class="button" id="test3">Test </button> {% endblock %}
