@@ -123,7 +123,7 @@ $("#postContainer").on("click", ".manage", function (e) {
         var formatPost = data.content.replace(/\n/g, "<br/>");
         post += "<p class='lead'> By: " + data.username + " Date: " + data.date + "</p><hr>";
         post += "<p>" + formatPost + "</p><hr></div>";
-        post += '<hr><button type="button" class="btn btn-danger delete" id="' + data.id + '" >Delete MEEE</button>'
+        post += '<hr><button type="button" class="btn btn-danger delete" id="' + data.id + '" >Delete</button>'
         $("#postContainer").html(post)
 
 

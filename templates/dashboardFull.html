@@ -1,4 +1,21 @@
-{% extends "index.html" %} {% block content %} {% with messages = get_flashed_messages() %} {% if messages %}
+{% extends "index.html" %} {% block content %} 
+
+
+<div class="container-fluid bg-1 text-center">
+
+    <div class="jumbotron jumbotron-fluid ">
+  <div class="container">
+    <h1 class="display-1">Dashboard</h1>
+    <hr/>
+    <p class="lead">Create,Manage, View</p>
+    
+
+
+    
+  </div>
+</div>
+    </div>
+    {% with messages = get_flashed_messages() %} {% if messages %}
 <ul class=flashes>
     {% for message in messages %}
     <li>{{ message }}</li>
@@ -7,12 +24,9 @@
 {% endif %} {% endwith %}
 
 
+<div class="container ">
 
-<div class="container">
-    <div class="jumbotron jumbotron-fluid">
-        <h1 class="display-1">Dashboard </h1><small>Create, View and Manage Posts</small>
-
-    </div>
+    
 
     <div class="row">
         <div class="col-md-8">
@@ -57,6 +71,4 @@
     </div>
 </div>
 
-
-
-<button class="button" id="test3">Test </button> {% endblock %}
+ {% endblock %}

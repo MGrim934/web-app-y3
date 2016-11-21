@@ -6,7 +6,32 @@
 
 {% else %}
 
-{% with messages = get_flashed_messages() %}
+
+<!--col - columns
+ md - medium
+ 3 of twelve potential columns, this element takes 3
+ offsets by x number of columns-->
+
+
+ <div class="container-fluid bg-1 text-center">
+
+    <div class="jumbotron jumbotron-fluid ">
+  <div class="container">
+    <h1 class="display-1">Log in</h1>
+    <hr/>
+    <p class="lead">Log in to join the blogosphere. <small>I don't think that is a real word...</small></p>
+    
+
+
+    
+  </div>
+</div>
+    </div>
+
+
+
+<div class="container">
+    {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}
@@ -15,11 +40,6 @@
     </ul>
   {% endif %}
 {% endwith %}
-<!--col - columns
- md - medium
- 3 of twelve potential columns, this element takes 3
- offsets by x number of columns-->
-<div class="container">
   <div class = "col-md-4">
 <form action="/login/" method="POST">
   <div class="form-group">

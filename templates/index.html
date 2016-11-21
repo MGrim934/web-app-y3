@@ -13,43 +13,44 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi"
         crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <!-- Nav bar classes from bootstrap v4 templates-->
 
 <nav class="navbar navbar-dark bg-inverse">
-  <div class="nav navbar-nav">
-      <!-- if the screen is smaller, the nav bar collapses-->
-      <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"></button>
-        <div class="collapse navbar-toggleable-md nav-tabs" id="navbarResponsive">
-      
+    <div class="nav navbar-nav">
+        <!-- if the screen is smaller, the nav bar collapses-->
+        <button class="navbar-toggler hidden-lg-up" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation"></button>
+        <div class="collapse navbar-toggleable-md " id="navbarResponsive">
 
-        <a class="navbar-brand" href="/">CoolSite</a>
-        <a class="nav-item nav-link" href="/">Home </a>
-        <a class="nav-item nav-link" href="/dashboard/">Dashboard</a>
 
-        <a class="nav-item nav-link" href="/about/">About</a>
-        {% if session['logged_in'] %}
-        <!--#https://pythonspot.com/en/login-authentication-with-flask/
+            <a class="navbar-brand" href="/">CoolSite</a>
+            
+            <a class="nav-item nav-link" href="/dashboard/">Dashboard</a>
+
+            <a class="nav-item nav-link" href="/about/">About</a> {% if session['logged_in'] %}
+            <!--#https://pythonspot.com/en/login-authentication-with-flask/
         This tutorials login screen used sessions to see if you were already logged in and display the appropriate message using jinja
         after implementing it in a way the tutorial suggested, attempted to expand on the idea and use it to dictate whether the page says login/out
         seems to be working - hurray! -->
-                <a class="nav-item nav-link" href="/logout/">Log out</a>
-                <span class="navbar-text float-xs-right text-muted">
+            <a class="nav-item nav-link" href="/logout/">Log out</a>
+            <span class="navbar-text float-xs-right text-muted">
                     Logged in as {{session.get("username")}}
                 </span>
-    </nav>
-        {% else %}
-                <a class="nav-item nav-link" href="/register/">Register</a>
-                <a class="nav-item nav-link" href="/login/">Log in</a>
+</nav>
+{% else %}
+<a class="nav-item nav-link" href="/register/">Register</a>
+<a class="nav-item nav-link" href="/login/">Log in</a> {% endif %}
+</div>
+</div>
 
-        {% endif %}
-    </div>
-  </div>
-  
 </nav>
 
+
 <div class="container" id="primaryView">
- 
+
 
 </div>
 
