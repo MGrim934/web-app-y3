@@ -1,20 +1,18 @@
 //dashboard specific functions here?
 $(function () {
+    //when the document (that is dashboard) loads, it populates the page with recent posts
     showRecentPosts();
 
 });
 
-var showRecentPosts = function (){
-    
-    $.get("/allposts/",function(data){
+var showRecentPosts = function () {
+
+    $.get("/allposts/", function (data) {
         //get all posts
-        
-        d=JSON.parse(data);
-        //parse that data as json
-        //        d.sort(function (a, b) {
-        //    return b.id - a.id;
-      //  });
-      sortMe(d);
+
+        d = JSON.parse(data);
+        //parses the data as json
+        sortMe(d);
         //sort it by id! Recent up the top
         loadPosts(d);
         //load them
@@ -23,28 +21,25 @@ var showRecentPosts = function (){
 
 
 }
-var sortMe= function (posts){
-console.log("sort test")
-                posts.sort(function (a, b) {
-            return b.id - a.id;
-        });
+var sortMe = function (posts) {
+    //simple function to sort by id
+    //post id is incremented as more posts are added to post table, so more recent posts should be put first
+    console.log("sort test")
+    posts.sort(function (a, b) {
+        return b.id - a.id;
+    });
 }
 
-$("#btnRecentPosts").click(function(){
-   
+$("#btnRecentPosts").click(function () {
 
+    //when the user wants to see the ten most recent posts
     showRecentPosts();
 });
 
-//main to dos
-//verification and validation of users
-//if logged in user hits create, ajax
-//styling
 
-/*$(function () {
 
-    $("#postContainer").load("/showall/");
-});*/
+
+
 
 //want to create a function that loads posts into a div
 var loadPosts = function (data) {
@@ -59,11 +54,9 @@ var loadPosts = function (data) {
     }
     for (var i = 0; i < show; i++) {
         //function to format a post
-        //neato burrito
-       
-        var p = format(data[i]);
+   
 
-        //post += '<hr><button type="button" class="btn btn-info manage" id="' + data[i].id + '" >Change</button>'
+        var p = format(data[i]);
 
         $("#postContainer").append(p);
         //in this case append, could html as well
@@ -72,29 +65,33 @@ var loadPosts = function (data) {
     }//for
 
 
- 
+
 }//load posts
 
 
 
-var format = function(curPost){
+var format = function (curPost) {
     //formats the current post!
+    //puts it in a little div container with some grey shading
+    //displays title, content, id, all that stuff
 
-        var post = "<div class='container' style='background-color: rgba(0,0,20,0.1); margin-bottom: 10px;'><h1 class='display-3'>" + curPost.title + "</h1>";
-        var formatPost = curPost.content.replace(/\n/g, "<br/>");
-        post += "<p> By: " + curPost.username + " Date: " + curPost.date + "</p><hr >";
-        post += "<p class='lead'>" + formatPost + "</p><hr></div>";
+    var post = "<div class='container' style='background-color: rgba(0,0,20,0.1); margin-bottom: 10px;'><h1 class='display-3'>" + curPost.title + "</h1>";
+    var formatPost = curPost.content.replace(/\n/g, "<br/>");
+    //replaces line breaks with br to ensure that it will properly display on the page
+    post += "<p> By: " + curPost.username + " Date: " + curPost.date + "</p><hr >";
+    post += "<p class='lead'>" + formatPost + "</p><hr></div>";
 
-        return post;
-
+    return post;
+    //returns a string
 
 }
 
 
 
 $("#btnMyPosts").click(function () {
-    console.log("test")
+  
     updateViewPersonal();
+    //shows posts that the user has made
 
 
 
@@ -105,70 +102,82 @@ $("#btnMyPosts").click(function () {
 //why?
 //with .on, this function will work with dynamically created elements after initial load
 //doesn't work this way with .click alone'
-$("#postContainer").on("click", ".manage", function (e) {
-    console.log(e);
-    console.log("check me out again... more test logs");
-    myID = $(this).attr("id")
-    console.log(myID)
-    $.get("/userposts/" + myID, function (data) {
-        console.log(data)
-        //instead of posting console. log, should fill up the div with
-        //the post
-        //an option to delete the post
-        //perhaps an option to update the post
-        data = JSON.parse(data)
+//since I'm programmatically adding these buttons for every post it makes sense to use .on instead of just click
 
-        //hide the post container, show the edit
-        var post = "<h1 class='display-4'>" + data.title + "</h1>";
-        var formatPost = data.content.replace(/\n/g, "<br/>");
-        post += "<p class='lead'> By: " + data.username + " Date: " + data.date + "</p><hr>";
-        post += "<p>" + formatPost + "</p><hr></div>";
-        post += '<hr><button type="button" class="btn btn-danger delete" id="' + data.id + '" >Delete</button>'
+$("#postContainer").on("click", ".manage", function (e) {
+
+    myID = $(this).attr("id")
+    //every manage button is given an id upon creation
+    //the id is the post id
+    //assigns the buttons id to the myID variable
+    //can then use this to retrieve that post!
+
+   
+    $.get("/userposts/" + myID, function (data) {
+        //gets JUST the post of id "myID"
+        data = JSON.parse(data)
+        //parse it
+
+        
+        var post = format(data);
+        //format the post using that format function
+
+        post += '<hr><button type="button" class="btn btn-block btn-danger delete" id="' + data.id + '" >Delete</button><hr/>'
+        //append this button which will give the user the option to delete their post upon request
         $("#postContainer").html(post)
+        
 
 
     })
 });
 
 function updateViewPersonal() {
+    //this function is designed to show the user the posts they've made as well as present the option to change it'
+    
     $.get("/userposts/", function (data) {
-      
+        //callback function begins!
+        //get the posts of whoever is logged in
+        //checks who is logged in with the session object in flask
+
         $("#postContainer").empty();
+        //empty the container!
         d = JSON.parse(data)
-      
+        //parse the data!
+
         sortMe(d);
-        //sort it out m8
+        //sort it
         if (d.length < 1) {
             console.log("empty")
             $("#postContainer").append("You have not made any posts!");
+            //a message for the user if they haven't made any posts'
         } else {
 
 
             for (var i = 0; i < d.length; i++) {
+                //loops through each post
+                //formats it
 
                 var post = format(d[i]);
 
-                post += '<hr><button type="button" class="btn btn-info manage" id="' + d[i].id + '" >Change</button>'
+                post += '<hr><button type="button" class="btn btn-block btn-info manage" id="' + d[i].id + '" >Change</button><hr/>'
+                //adds this "manage" button that allows the user to choose to change it
+                //uses similar logic to the delete option in that the id of the button is assigned to whatever the post id is
 
                 $("#postContainer").append(post);
-
+                //use append instead of html since we want to append each of the user posts
+                //if I used .html it would overwrite the html content each time
 
             }//for
 
-
-
-
-        }
-        console.log("testing updateViewPersonal")
-
-
-        //callback
+        }//else
+        //callback function ends
+       
     });
 
 
 }
 
-//need to implement delete and ajax post for post creation
+
 //learned some stuff about jquery selectors
 //http://stackoverflow.com/questions/23223526/jquery-selector-for-id-starts-with-specific-text
 //allowed me to dynamically create buttons and assign appropriate functions to them
@@ -199,18 +208,10 @@ $("#postContainer").on("click", ".delete", function (e) {
 
 
 
-$("#test3").click(function () {
-    console.log("check me out")
-
-    $("#postContainer").load("/userposts/f/");
-});
-
 //forcreation purposes
 $("#btnCreate").click(function () {
-    console.log("I am the creator")
-    //load in the creation div
-    //hide and show your posts?
-    //or just show all posts
+   
+    //just swaps the display
     swapDisplay();
 
 
@@ -219,7 +220,6 @@ $("#btnCreate").click(function () {
 
 
 $("#btnPublish").click(function (e) {
-    console.log("yes we shall publish you")
     e.preventDefault();
     //prevent default!
     //now grab those vars
@@ -228,9 +228,11 @@ $("#btnPublish").click(function (e) {
         content: $("#content").val()
 
     }
+    //create an object that can be read in the .py file
     console.log(post)
     $.post("/create/", post, function (e) {
-        console.log("Test" + e);
+        //posts your creation
+        //swaps you back to the display of the post container
         swapDisplay();
         //trigger a load of your posts
         updateViewPersonal();
@@ -245,6 +247,7 @@ $("#btnPublish").click(function (e) {
 
 $("#btnCancel").click(function () {
     console.log("cancel that");
+    //you're cancelling so simply swap the display from the creation
     swapDisplay();
 
 
@@ -252,11 +255,16 @@ $("#btnCancel").click(function () {
 
 });
 
+//==========================
+
 var swapDisplay = function () {
 
     //need to show and hide displays!
     //http://stackoverflow.com/questions/5059596/jquery-css-remove-add-displaynone
     //found that display: none
+
+   //performs check to see what is currently being displayed and swaps it appropriately
+   //this is either the post creator or the post container div
     var check = $("#postCreator").css("display")
     console.log(typeof check)
     if (check == "inline") {
@@ -274,9 +282,10 @@ var swapDisplay = function () {
     }
 
 
-}
+}//swapDisplay
 
 var displayTitles = function () {
+    //this function gets all posts and shows the title and the author of each post
 
     //get all posts
     $.get("/allposts/", function (data) {
@@ -286,13 +295,17 @@ var displayTitles = function () {
         d.sort(function (a, b) {
             return b.id - a.id;
         });
+        //sort the posts so it shows most recent up at the top
         //set up a table
         $("#postContainer").empty();
         //put in a table
         $("#postContainer").append("<table class ='table'></table>");
         $("#postContainer").find("table").append("<thead><tr><td>Title</td> <td>Author</td> <td>Date</td> </tr> </thead>");
+        //put in a head
         for (var i = 0; i < d.length; i++) {
-            $("#postContainer").find("table").append("<tr> <td>" + d[i].title + "</td><td>" + d[i].username + "</td> <td>" + d[i].date + "</td><td><button class='btn btn-block btn-secondary btnShowMore' id = " + d[i].id + ">click me</button></td>+ </tr>")
+            $("#postContainer").find("table").append("<tr> <td>" + d[i].title + "</td><td>" + d[i].username + "</td> <td>" +
+             d[i].date + "</td><td><button class='btn btn-block btn-secondary btnShowMore' id = " + d[i].id + ">click me</button></td>+ </tr>");
+             //for each post append a row to the table
         }
         //dynamically adding and adding to tables
         //http://stackoverflow.com/questions/2160890/how-do-you-append-rows-to-a-table-using-jquery
@@ -321,11 +334,7 @@ $("#postContainer").on("click", ".btnShowMore", function (e) {
     $.get("/userposts/" + id, function (data) {
         console.log(data)
         d = JSON.parse(data);
-        post= format(d);
-
-        /*   if(id==d.id){
-           post += '<hr><button type="button" class="btn btn-info manage" id="' + d.id + '" >Change</button>';
-           }*/
+        post = format(d);
 
         $("#postContainer").html(post);
 
