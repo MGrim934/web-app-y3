@@ -1,8 +1,8 @@
-<<<<<<< HEAD
+
 # Web Application Project
 =======
 # Web Application - Third Year Student Project
->>>>>>> efbd6f665a764b9c7f989283192eb86da02e0c11
+
 ##BlogThing 3000
 
 This project was created using python 3.5 and the flask microframework. Any other packages are referenced below.
