@@ -3,20 +3,22 @@ import os
 
 import datetime
 
-#main to-do list
-#adapt create route for ajax
-#ensure appropriate redirection based on logging in/out
-#make the test dashboard the new main dashboard and phase out the early one
-
-#https://docs.python.org/2/library/datetime.html#datetime.datetime.tzinfo
-#decided to import datetime but only use date element
-#blog does not need Time
-#may consider adding time in the Future 
-#perhaps moment.js and utc formatting?
-
 from sqlalchemy.orm import sessionmaker,scoped_session
 from tableDef import *
 from marshmallow import Schema, fields,post_dump
+
+
+#Mark Grimes Third year web app project
+
+
+#https://docs.python.org/2/library/datetime.html#datetime.datetime.tzinfo
+#decided to import datetime but only use date element
+
+#blog does use time
+
+#perhaps moment.js and utc formatting?
+
+
 #what is marshmallow
 #serialisation
 #use case: convert sqlalchemy object to json so I can mess with it in jquery
@@ -44,9 +46,9 @@ class userSchema(Schema):
 
 
 
-#Mark Grimes Third year web app project
 
-engine = create_engine('sqlite:///db/myStorage.db', echo=True)
+
+engine = create_engine('sqlite:///db/myStorage.db', echo=False)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 #from flask website about patterns related to sqlalchemy
 #http://flask.pocoo.org/docs/0.11/patterns/sqlalchemy/
@@ -68,17 +70,17 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 
 #session allows to track the user, if their session is "logged in" for example
 #import os so we can set a secret key with a random number
-#apparently random number is safer!
+#safety
+
 app = Flask(__name__)
 
+#default route
 
 @app.route("/")
 @app.route("/home/")
 def index():
     if not session.get('logged_in'):
         
-        now = datetime.datetime.today()
-        print(now)
         return render_template("welcome.html")
         #if they aren't logged in, bring them to the welcome screen
         #not much to do except log in and feel...welcome
@@ -94,17 +96,14 @@ def index():
 
 @app.route('/login/', methods=["GET","POST"])
 def login():
-    print("test")
+
     if request.method=="POST":
         #if its a post
-        print ("post")
+      
         name=request.form['username']
         password=request.form['password']
         #attempts to store the password and name
-       # Session = sessionmaker(bind=engine)
-       # s=Session()
-       #used code like this before I tried to implement scoped session at top of app.py
-       #querys the database with a filter of the entered user name and password
+      
         query = db_session.query(User).filter(User.username.in_([name]), User.password.in_([password]) )
         #if it found something as a result of the filter, result will be assigned a status of true
         result = query.first()
@@ -130,7 +129,7 @@ def login():
 def dashboard():
     if session.get("logged_in")==True:
         
-        return render_template("dashboardFull.html")
+        return render_template("dashboard.html")
         #send the user to the main dash!
     else:
         flash("You need to log in to access the dashboard")
@@ -152,7 +151,7 @@ def logout():
     #returns them to the welcome screen
     #hurray
 
-#=============end of /login/===============
+#=============end of /logout//===============
 
 
 #add a new users
@@ -163,12 +162,19 @@ def register():
         password=request.form['password']
         #a post request
         #simple registration. Just a name and a password
-        #perhaps add better authentication if have time!
-        #check database before adding?
+      
+        query = db_session.query(User).filter(User.username.in_([name]))
+        #query to the database to see if a user with this name exists
+        result = query.first()
+        #if its already in the database flash a message and make them try again, can't have two people with the same name'
+        if result:
+            flash(name+" is already an account name! Try a different name")
+            return render_template("register.html")
 
 
-       # Session = sessionmaker(bind=engine)
-       # s=Session()
+
+
+      
         user = User(name,password)
         #creates an object of the user class defined in tableDef
         db_session.add(user)
@@ -204,14 +210,7 @@ def create():
             username= session.get("username")
            
             dt = datetime.datetime.today()
-            print(username)
-            print(content)
-            print(title)
-            print(dt)
-            #just making sure its taking values in correctly
-            #lets see if we can add to a database
-            #Session = sessionmaker(bind=engine)
-           # s=Session()
+    
             post = Post(title,content,username,dt)
             #creating a Post object defined in tableDef
             db_session.add(post)
@@ -229,34 +228,14 @@ def create():
 #==============end of /create/================================================
 
 
-@app.route("/posts/")
-def posts():
-    #Session = sessionmaker(bind=engine)
-    #s=Session()
-    #a test view just to make sure views are showing
-    #must make pretty and show all posts for reasons and stuff
-    posts =  db_session.query(Post).all()
-    return render_template("posts.html", posts=posts)
 
-
-
-#============endof/posts/======================================================
-
-@app.route("/posts/<id>")
-def showPost(id):
-    posts = db_session.query(Post).filter(Post.id.in_(id))
-    return render_template("posts.html", posts=posts)
 
 
 @app.route("/about/")
 def about():
     return render_template("about.html")
 
-#test for new dashboard
-@app.route("/dashboard/")
-def dash():
-    posts =  db_session.query(Post).all()
-    return render_template("dashboardFull.html",posts=posts)
+
 
 @app.route("/allposts/")
 def getall():
@@ -266,14 +245,61 @@ def getall():
     #create a schema object - many=true ensures it will work with a list of objects like this query!
     res= schema.dump(result)
     #dumping the result
-    print(res.data)
+ 
     return json.dumps(res.data)
     #finally returning it as a json friendly String
     #can be parsed with jquery in the view
-    #hurray
+ 
     
-    #result =[dict(r) for r in db_session.query(Post).all()]
 
+
+
+
+@app.route("/userposts/")
+def getUserInfo():
+    #get everything
+    name = session.get("username")
+
+    
+    result = db_session.query(Post).filter_by(username = name).all()
+    schema = postSchema(many=True)
+    #create a schema object - many=true ensures it will work with a list of objects like this query!
+    res= schema.dump(result)
+    #dumping the result
+
+    return json.dumps(res.data)
+
+
+@app.route("/userposts/<i>")
+def getPost(i):
+
+    
+    #whats the difference between filter and filter_by?
+    
+    p = db_session.query(Post).get(i)
+    #sqlalchemy prefers if you get when filtering by id
+    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
+  
+    schema = postSchema()
+    #create a schema object 
+    res= schema.dump(p)
+    #dumping the result
+   
+    return json.dumps(res.data)
+
+@app.route("/userposts/<i>",methods=["DELETE"])
+def deleteIt(i):
+    #first get the record I want to delete
+    a=db_session.query(Post).get(i)
+    #now delete it
+    db_session.delete(a)
+    db_session.commit()
+    #need to commit delete 
+    #sqlalchemy prefers if you get when filtering by id
+    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
+
+ 
+    return "deleted"
 
 @app.route("/users/")
 def getUsers():
@@ -283,84 +309,7 @@ def getUsers():
     print(res.data)
     return json.dumps(res.data)
 
-@app.route("/userposts/")
-def getUserInfo():
-    #get everything
-    name = session.get("username")
-    print(name)
-    #whats the difference between filter and filter_by?
-    result = db_session.query(Post).filter_by(username = name).all()
-    schema = postSchema(many=True)
-    #create a schema object - many=true ensures it will work with a list of objects like this query!
-    res= schema.dump(result)
-    #dumping the result
-    print(res.data)
-    return json.dumps(res.data)
-
-
-@app.route("/userposts/<i>")
-def getPost(i):
-    #get everything
-    print("stuuuuuuuuuuuuuuuuuuuuuuuffff")
-    print(i)
     
-    #whats the difference between filter and filter_by?
-    
-    p = db_session.query(Post).get(i)
-    #sqlalchemy prefers if you get when filtering by id
-    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
-   # print(p)
-    schema = postSchema()
-    #create a schema object - many=true ensures it will work with a list of objects like this query!
-    res= schema.dump(p)
-    #dumping the result
-    print(res.data)
-    return json.dumps(res.data)
-
-@app.route("/userposts/<i>",methods=["DELETE"])
-def deleteIt(i):
-    #get everything
-    print("Delete Test")
-    print(i)
-    
-    #whats the difference between filter and filter_by?
-    
-    #first get the record I want to delete
-    a=db_session.query(Post).get(i)
-    #now delete it
-    db_session.delete(a)
-    db_session.commit()
-    #need to commit delete 
-    #sqlalchemy prefers if you get when filtering by id
-    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
-   # print(p)
- 
-    return "deleted"
-
-@app.route("/showall/")
-def showAll():
-    p=result = db_session.query(Post).all()
-    return render_template("allPosts.html",posts=p)
-
-@app.route("/userposts/f/")
-def userPosts():
-
-    name = session.get("username")
-    print(name)
-  
-    result = db_session.query(Post).filter_by(username = name).all()
-    return render_template("userPosts.html",posts=result)
-    
-   
-   
-    
-  
-  
-
-    
-    
-
-
 
 
 
@@ -370,6 +319,14 @@ def page_not_found(e):
     err = e
     return render_template('404.html',err=err), 404
     #simple 404 example
+
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
+#http://flask.pocoo.org/docs/0.11/patterns/sqlalchemy/
+#http://docs.sqlalchemy.org/en/latest/orm/contextual.html
 
 
 

@@ -1,5 +1,68 @@
 .nav-item{
 margin-left:30px !important;
 margin-right:30px;
+margin-bottom:0;
 
+}
+
+body{
+
+    background-color:whitesmoke;
+
+    
+
+}
+.navbar-brand{
+    color: white !important;
+    
+}
+.navbar-brand:hover{
+    color: turquoise !important;
+    
+}
+.navbar{
+    background-color: darkviolet !important;
+}
+.navbar-text{
+    color: white !important;
+}
+.nav-item{
+    color: white !important;
+}
+.nav-item:hover{
+    color: turquoise !important;
+}
+
+.jumbotron{
+   background: white !important;
+    background-image: url("pictures/meow.gif") !important;
+    background-repeat: no-repeat !important;
+    background-position: right center !important;
+ 
+  
+ 
+}
+
+.jumbotron h1{
+    color: darkviolet !important;
+}
+
+
+.navbar-toggler{
+    background-color: mintcream !important;
+}
+
+.posthold{
+   background-color: white !important;
+
+}
+.posthold h1{
+    color: darkviolet;
+    
+}
+
+.opt{
+    
+    color: darkviolet;
+    text-align: center;
 }

@@ -19,7 +19,8 @@
   <div class="container">
     <h1 class="display-1">Log in</h1>
     <hr/>
-    <p class="lead">Log in to join the blogosphere. <small>I don't think that is a real word...</small></p>
+    <p class="lead">Log in to join the blogosphere.</p>
+    <p>I'm sure you have some fun and interesting things to say </p>
     
 
 
@@ -31,15 +32,7 @@
 
 
 <div class="container">
-    {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+
   <div class = "col-md-4">
 <form action="/login/" method="POST">
   <div class="form-group">
@@ -53,10 +46,20 @@
    <button type="submit" class="btn btn-block btn-success">Log in</button>
 </form>
 </div>
+            {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 </div>
 <!-- http://flask.pocoo.org/docs/0.11/patterns/flashing/
         found information on flashing here. Handy for different errors
         Perhaps the user had an incorrect login, or tried to skip directly to the dash -->
+
 {% endif %}
 
 {% endblock %}

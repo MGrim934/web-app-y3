@@ -5,12 +5,7 @@
 <a  href="/dashboard/"><button class="button">Go to the Dashboard </button></a>
 
 {% else %}
-<!--<h1>Register to be cool (and to post)</h1>
-<form action="/register/" method="POST">
-  <input type="username" name="username" placeholder="Username">
-  <input type="password" name="password" placeholder="Password">
-  <input type="submit" value="Register">
-</form>-->
+
 
  <div class="container-fluid bg-1 text-center">
 
@@ -19,6 +14,7 @@
     <h1 class="display-1">Register</h1>
     <hr/>
     <p class="lead">Register to enjoy benefits such as being able to actually use this web app.</p>
+    <p>Many benefits await</p>
     
 
 
@@ -26,6 +22,15 @@
   </div>
 </div>
     </div>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
 <div class="container ">
   <div class="col-md-4 ">
@@ -43,24 +48,23 @@
 </div>
 
 <div class="container col-md-4 offset-md-4">
-  Once you register you will be able to: <br/>
-  Create Posts <br/>
-  View Posts <br/>
-  Gain a greater sense of self worth.
-  </div>
+  Register to:
+<ul>
+  
+  
+  <li>Create New Posts</li>
+  <li>See Recent Posts</li>
+  <li>See a more comprehensive list of all posts</li>
+  <li> Manage posts</li>
+
+
+
+</ul>
 
 </div>
 <!-- http://flask.pocoo.org/docs/0.11/patterns/flashing/
         found information on flashing here. Handy for different errors
         Perhaps the user had an incorrect login, or tried to skip directly to the dash -->
 {% endif %}
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+
 {% endblock %}
