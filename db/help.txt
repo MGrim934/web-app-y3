@@ -1,0 +1,83 @@
+A quick user guide. This can also be found on github at https://github.com/MGrim934/web-app-y3 along with a lengthy design document.
+
+The database should be created in this folder
+***
+
+
+##Installation
+This was created in Python and uses the flask microframework.
+To install this application, you will need a version of python as well as the packages the app uses.
+You will also need to run two .py files which define tables and fill them up with some dummy data. 
+The easiest way to get up and running is to follow these steps.
+
+
+
+1. Go to <https://www.continuum.io/downloads>
+  * This is a link to Anaconda. This includes an installation of python as well as
+	a large collection of useful packages in one tidy installer.
+  * Download the latest version for Python 3. This was not made in Python 2.
+  * Follow the installation instructions
+  * Note: This is the easiest way to get up and running. Anaconda includes flask, SqlAlchemy and other packages used in this project.
+
+2. Once Python and anaconda is installed you will need to install one more package.
+	This app uses a package known as "Marshmallow". Open up your terminal and type:
+	> pip install -U marshmallow
+	
+3. Clone the repository from github
+  * Documentation on how to do this can be found on github
+
+4. Open up the command console in the appropriate directory and run the following commands.
+	> python tableDef.py
+	
+	> python fillDB.py
+	
+	* The first defines data base tables and creates the database.
+	* The second fills the database with some dummy data.
+	
+5. Finally into the console type
+	> python myApp.py
+	
+	* This will host the app locally.
+	* Navigate to <http://127.0.0.1:5000/> in your browser of choice.
+	
+6. You should be able to use the app now.
+
+***	
+
+
+USER GUIDE
+#Using the App
+I attempted to design the u.i. to be as clear and concise as possible.
+Each button is clearly labelled. However, here are some guidelines on how to use the app.
+
+###Log in/Registration
+  To actually use this app you must either log in to an existing account or register.
+  Simply go to the registration page and create a username and password or use an existing one.
+  I have some dummy accounts in there already. Feel free to use those for the sake of testing functionality.
+  E.g. User: "admin" Password:  "password" will log you in as the admin.
+  
+#I created an account. What now?
+
+###DASHBOARD
+This is the primary view of the app. Pretty much everything you want to do will be in the dashboard.
+You can only view the dashboard if you are logged in.
+It will show you the ten most recent posts made by all users of the system when you log in.
+
+###Options
+
+* Create
+  * Enter a title, enter your post content and publish it for others to read.
+  
+* Show Everyone's Posts
+	* This will show you the titles of all posts, the date it was made and the author of each post.
+	From here you will be able to click to see the full post content. Should you wish to do so.
+
+* Recent Posts
+  * Loads in the ten most recent posts for you to see in full.
+
+* Manage My Posts
+  * Allows you to see all of the posts you've made with the option for further management.
+Right now, this amounts to being able to delete the post.
+
+* Log out!
+  * When you are done!

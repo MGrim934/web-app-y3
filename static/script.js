@@ -80,11 +80,13 @@ var swapDisplay = function () {
         //this shows the post creator div
         //hide the main post container
         $("#postContainer").css("display", "inline")
+        $("#divOptions").css("display", "inline")
 
 
     } else {
         $("#postCreator").css("display", "inline")
         //this shows the post creator div
+        $("#divOptions").css("display", "none")
         //hide the main post container
         $("#postContainer").css("display", "none")
     }
@@ -110,22 +112,6 @@ var format = function (curPost) {
 
 }
 
-
-var format2 = function (curPost) {
-    //formats the current post!
-    //puts it in a little div container with some grey shading
-    //displays title, content, id, all that stuff
-
-    var post = "<div class='jumbotron' style='margin-bottom: 10px;'><h1 class='display-3'>" + curPost.title + "</h1>";
-    var formatPost = curPost.content.replace(/\n/g, "<br/>");
-    //replaces line breaks with br to ensure that it will properly display on the page
-    post += "<p> By: " + curPost.username + " Date: " + curPost.date + "</p><hr >";
-    post += "<p class='lead'>" + formatPost + "</p><hr></div>";
-
-    return post;
-    //returns a string
-
-}
 
 //================================================================================================================
 

@@ -1,6 +1,6 @@
 
 # Web Application Project
-=======
+---
 # Web Application - Third Year Student Project
 
 ##BlogThing 3000
@@ -21,7 +21,8 @@ Once logged in a user can
   * delete their posts
 	
 
-	
+***
+
 ##Installation
 This was created in Python and uses the flask microframework.
 To install this application, you will need a version of python as well as the packages the app uses.
@@ -35,13 +36,14 @@ The easiest way to get up and running is to follow these steps.
 	a large collection of useful packages in one tidy installer.
   * Download the latest version for Python 3. This was not made in Python 2.
   * Follow the installation instructions
+  * Note: This is the easiest way to get up and running. Anaconda includes flask, SqlAlchemy and other packages used in this project.
 
 2. Once Python and anaconda is installed you will need to install one more package.
 	This app uses a package known as "Marshmallow". Open up your terminal and type:
 	> pip install -U marshmallow
 	
 3. Clone the repository from github
-  * Documentation on how to do this can be found on the github
+  * Documentation on how to do this can be found on github
 
 4. Open up the command console in the appropriate directory and run the following commands.
 	> python tableDef.py
@@ -73,6 +75,8 @@ Each button is clearly labelled. However, here are some guidelines on how to use
 ###Log in/Registration
   To actually use this app you must either log in to an existing account or register.
   Simply go to the registration page and create a username and password or use an existing one.
+  I have some dummy accounts in there already. Feel free to use those for the sake of testing functionality.
+  E.g. User: "admin" Password:  "password" will log you in as the admin.
   
 #I created an account. What now?
 
@@ -100,12 +104,14 @@ Right now, this amounts to being able to delete the post.
 * Log out!
   * When you are done!
 
+***
+
 
 ##Project Goal
 This was a learning project. I wanted to create a small private blogging app and attempted to design
-an easy to use but functional system that allowed users the ability to make and store posts.
-A simple concept, but one that allowed me to explore several areas such as
- * Simple Log in system
+an easy to use but functional system that gave users the ability to make and store posts.
+A simple concept, but one that allowed me to explore several areas including:
+ * Implementing a simple log in system
  * Database usage
  * AJAX calls
  
@@ -122,14 +128,26 @@ A simple concept, but one that allowed me to explore several areas such as
  It had its advantages and disadvantages. There is plenty of precedence for using SQLite as a storage system
  with python and flask which meant there was plenty of documentation to consult.
 
-####Issues
+ ###Schema
+ I opted for a very basic schema. There are two tables. One for users. One for posts
+ Users simply stores username and password values. 
+ Validation is handeled in flask. Before attempting to add to the table, it performs a query to check if it already exists in the database.
+ Posts contains a title, a date, content and the author.
+
+ I did not implement foreign key constraints on the relationship between the post/user in regards author. Perhaps this is something I could have done for better validation.
+
+
 #####SqlAlchemy
 
 <http://www.sqlalchemy.org/>
 
 SqlAlchemy is an Object Relational Mapper that is easy to integrate with SQLite.
 I used this as it allows a programmer to treat database queries as python objects which was useful when working in python.
-It also meant I could use its datetime object to store post dates that. Important for any blogging application!
+It also meant I could use its datetime object to store post dates that. Since the app stores dates, this was useful.
+SqlAlchemy also allowed the use of a "scoped_session" which helped get around issues of thread safety.
+
+
+
 
 #### Marshmallow
 
@@ -143,32 +161,62 @@ The answer was marshmallow.
 Although I ran into a number of methods of getting around this issue (including creating custom functions to get around this)
 marshmallow was an easy to install package. So I went with this.
 
+I first define appropriate schemas that corrospond to the database objects. (Remember, SqlAlchemy allows me to treat database querys as objects.)
+Then I can create an object instance of it (such as schema = postSchema())
+This object use a .dump method to dump a query result into a format that can then be jsonified.
+After doing this, I no longer get a "type error" message which would say that object could not be serialized.
+
 ####Thoughts
 In the end SQLite pretty much did what I needed it to do, so it could be considered a success. However, having to jump through hoops using additional packages
 is probably not ideal. In future projects I would hope to use more robust database systems such as couchDB or MongoDB.
 
+##JINJA2
+Jinja2 is a templating language for python. Its syntax was easy enough to understand. I defined one basic "index" template that all other pages extend from.
+Of course, once the user is logged in, the dashboard page becomes the primary focus.
+I experimented with using jinja2's ability to loop through python lists to display posts. Making calls for information, and returning a template along with the appropriate data.
+However, as I progressed with the project, I decided to change this and opted for the server to send back JSON more often than not. I found this suitable for jquery calls.
+ They make a request, wait for a response, then fill the appropriate divs with the appropriate information.
+
 
 #AJAX
-##Jquery
+####Jquery
 The app makes many ajax calls both on page load and on button click. To implement these calls I used the Jquery library.
 I found that jquery offered a great amount of flexibility and allowed me to acheive most of what I needed it to do.
-For example: 
+Example functions: 
 On a page load, load the ten most recent posts.
 
 On user request:
 
 * Create a post (performs a post request to flask)
-* Get their own posts
+* Get their own posts (vefifies with session object)
 * Delete a post (performs a delete request to flask)
 * view the posts of others.
 
 I also used jquery to dynamically render elements in the html. I.e. It loads content based on the json it gets back.
 For example, for every post it receives as part of "manage my posts" it creates a suitable div and button to allow the user to view and manage the post.
 
+I used the JQUERY get and post methods for most of these calls. GET if I wanted to bring information to the client (such as a list of recent posts) and POST when creating a new post or registering.
+I also made use of the DELETE request using .ajax syntax. This is slightly less elegant than using jquery's post and get methods (requiring a little more information in the jquery code).
+Flask was able to recognise this "delete" request and triggers the appropriate actions as a result.
+
+#### Functions
+Initially my code featured a lot of re-use (just look at some of the earlier commits!) which resulted in a script file that I found quite difficult to understand.
+Perhaps this is my fault, perhaps it has to do with javascript and jquery's willingness to let one run wild.
+I spent some time refactoring the script file in an attempt to make the jquery as readable, as concise and as efficient as possible.
+
+This resulted in me creating a few functions that are used in several different contexts to a different end.
+For example, initially I had several functions that formatted posts in slightly different ways (with a lot of text). I tidied this up by creating one "format" function 
+that could then be called by any other events in the appropriate occassion. It also meant that when I wanted to change how a post was displayed, I simply had to change the code in one area instead
+of scanning up and down my code and making little changes constantly.
+
+
 ####Thoughts
 Although Jquery is a powerful tool, I found it initially overwhelming. There is much documentation out there and many ways of doing many things.
 I spent a lot of time wondering what was the best way of doing something, and sometimes just had to pick "one decent way of doing it" instead of the "best way".
 There simply wasn't one. I have a much greater understanding of jquery than I did when I began the project, and find it much easier to read and understand.
+
+I am still weighing up the advantages of using jquery to render most of the html elements on the fly based on results as opposed to other methods.
+
 
 
 
@@ -179,7 +227,7 @@ From here, the database is queried and it looks for matching details. If it is a
 ##Sessions
 Tracking user logins is handeled with the flask session object.
 In flask, a session object includes information specific to the user and is implemented on top of cookies that are signed cryptographically.
-I found a number of packages that enhanced session functionality, but in the end decided the default session object was good enough for the scope of my project.
+I found a number of packages that enhanced session functionality, but in the end decided the default session object was suitable for the scope of my project.
 When a user logs in, their log in status is set to true and their name is stored in the object.
 This is used to determine whether they can view the primary "dashboard" view, as well as being used to store who made what post in the database.
 
@@ -194,10 +242,50 @@ For example
 * Jquery jsonifies the string
 Jquery handles filling the appropriate divs with the appropriate content.
 
-##Result
-Further goals for this project include implementing a more robust database, having far better user verification and allowing other users to comment other posts.
-However, in the 5-6 week scope (which included a lot of learning, coding, re-doing and scrapping) of the project, I feel like putting those to the side to focus on core functionality proved key.
-Building on the project bit by bit proved to be the best way of gradually making it come together, but it is undeniably far from perfect.
+As stated earlier in this design document, I am still weighing up whether my app has an over-reliance on jquery and if there was not a more elegant solution.
+
+## py file description
+
+##tableDef.py
+This file is responsible for creating the database and the tables. SqlAlchemy maps objects to the relational database tables (sqlite3) and vice versa.
+
+##fillDb.py
+This is simply a file that fills that database with some data for demonstration purposes. 
+
+Run tableDef.py before fillDb.py
+
+##myApp.py
+This is the main file. This app uses the flask microframework. Marshmallow is also used in this.py file. At the top of the file, schemas that corrospond to the appropriate tables are defined.
+These come into play when flask attempts to send back a dump of a query. SqlAlchemy's objects are not jsonified easily so it is important to define these schemas. From here, an object can
+be created when appropriate and used to dump the result into something that can then be returned in a suitable format using JSON.Dumps.
+
+There are many decorators, most of which the user won't directly interaction with.
+
+When a get request is performed on the majority of routes, the first thing that is checked is "Is this person logged in" (Sessions)
+They are returned the appropriate result depending on their information.
+For example, if somebody tries to access the dashboard but isn't logged in, they are sent to the log in screen.
+
+Once a user is logged in, they stay on the dashboard (for the most part). Jquery handles most of the requests from here.
+For example, jquery makes a call to /userposts/ which returns the collection of posts for that user.
+/userposts/i attempts to return a post of a specific id.
+If JSON is sent back, the information is then rendered appropriately.
+
+It is also here that a db_session is defined. Once this is created, queries are performed on this and used to get appropriate results.
+
+##Static files
+Serving static files in flask seemed tricky at first, but I simply used url_for(a flask function) where appropriate to serve the few static files neccessary.
+
+##Styling and style.css
+Bootstrap V4 was used for this web app. It currently links to an appropriate CDN. Therefore, it is important to be online before using this app or it won't look right!
+However, I decided to override Bootstrap in a few locations to apply some personal styling. I tried to make it look a little more colourful without looking bloated.
+
+
+##script.js 
+This contains the neccessary code for the dashboard to work as intended.
+
+
+
+
 
 ##Conclusion
 It was a learning project, I feel like I have a much greater grasp of jquery and javascript. I also feel like I have a better handle on how database systems work.

@@ -235,6 +235,8 @@ def create():
 def about():
     return render_template("about.html")
 
+#===============================================================================
+
 
 
 @app.route("/allposts/")
@@ -249,6 +251,9 @@ def getall():
     return json.dumps(res.data)
     #finally returning it as a json friendly String
     #can be parsed with jquery in the view
+
+
+#===============================================================================
  
     
 
@@ -270,36 +275,57 @@ def getUserInfo():
     return json.dumps(res.data)
 
 
+
+#===============================================================================
+
+
+
 @app.route("/userposts/<i>")
 def getPost(i):
 
     
-    #whats the difference between filter and filter_by?
+    if session.get('logged_in'):
+        p = db_session.query(Post).get(i)
+        #sqlalchemy prefers if you get when filtering by id
+        #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
     
-    p = db_session.query(Post).get(i)
-    #sqlalchemy prefers if you get when filtering by id
-    #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
-  
-    schema = postSchema()
-    #create a schema object 
-    res= schema.dump(p)
-    #dumping the result
-   
-    return json.dumps(res.data)
+        schema = postSchema()
+        #create a schema object 
+        res= schema.dump(p)
+        #dumping the result
+    
+        return json.dumps(res.data)
+    else:
+        return "error"
+
+
+#===============================================================================
+
 
 @app.route("/userposts/<i>",methods=["DELETE"])
 def deleteIt(i):
     #first get the record I want to delete
     a=db_session.query(Post).get(i)
-    #now delete it
-    db_session.delete(a)
-    db_session.commit()
+    # check that the username is okay
+    name = session.get("username")
+    print(a.username)
+    if name == a.username:
+        #now delete it
+        print("they are the same, so I shall delete")
+        db_session.delete(a)
+        db_session.commit()
+        return "deleted"
+    else:
+        print("not the same!")
+        return "error"
     #need to commit delete 
     #sqlalchemy prefers if you get when filtering by id
     #http://stackoverflow.com/questions/6750017/how-to-query-database-by-id-using-sqlalchemy
 
- 
-    return "deleted"
+#===============================================================================
+
+
+
 
 @app.route("/users/")
 def getUsers():
@@ -308,6 +334,9 @@ def getUsers():
     res= schema.dump(result)
     print(res.data)
     return json.dumps(res.data)
+
+
+#===============================================================================
 
     
 
@@ -335,4 +364,4 @@ if __name__ == "__main__":
     #sets the secret key to a random number
     #imported the os so that one could take advantage of the random
     #security and stuff
-    app.run(debug=True)
+    app.run()
