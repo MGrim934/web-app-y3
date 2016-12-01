@@ -133,6 +133,8 @@ A simple concept, but one that allowed me to explore several areas including:
  Users simply stores username and password values. 
  Validation is handeled in flask. Before attempting to add to the table, it performs a query to check if it already exists in the database.
  Posts contains a title, a date, content and the author.
+ tableDef.py handles the creation of the database. 
+ Its creation (along with the .py file that fills the database with dummy data) was derived from here. <https://pythonspot.com/en/login-authentication-with-flask/>
 
  I did not implement foreign key constraints on the relationship between the post/user in regards author. Perhaps this is something I could have done for better validation.
 
